@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>AGG Chain Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>AGG Chain Wallet</h1>
+    <div class="form">
+      <h2>Import Account</h2>
+      <label for="private-key">Private Key:</label>
+      <input type="text" id="private-key" placeholder="Input your ethereum private key" required>
+      <button id="import-account">Import Account</button>
+      <br>
+      <span id="address"></span>
+    </div>
+    <div class="form">
+      <h2>Balance</h2>
+      <p id="balance">Balance: - AGG</p>
+    </div>
+    <div class="form">
+      <h2>Transaction List</h2>
+      <table id="transaction-list">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="form">
+      <h2>Send Transaction</h2>
+      <label for="agg-to">To:</label>
+      <input type="text" id="agg-to" placeholder="Receive AGG address" required>
+      <label for="agg-value">Value:</label>
+      <input type="text" id="agg-value" placeholder="Send value" required>
+      <button id="send-transaction">Send Transaction</button>
+    </div>
+
+    <div class="form">
+      <h2>Send Contract Transaction</h2>
+      <label for="contract-to">To:</label>
+      <input type="text" id="contract-to" placeholder="Contract address" required>
+      <label for="contract-value">Value:</label>
+      <input type="text" id="contract-value" placeholder="Send value" required>
+      <label for="call-data">Call Data:</label>
+      <input type="text" id="call-data" placeholder="Input hex data" required>
+      <button id="send-contract-transaction">Send Contract Transaction</button>
+    </div>
+  </div>
+  </div>
+  <script src="ethers-v4.min.js"></script>
+  <script src="wallet.js"></script>
+</body>
+
+</html>
