@@ -1,5 +1,6 @@
-const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8080');
-// const provider = new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/qfu3KPP1LckyT991B6o5SM9eK73EY2uu');
+const rpcUrl = 'http://3.1.85.101:8088';
+// const rpcUrl = 'http://127.0.0.1:8080';
+const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 let signer;
 
 // Create account
@@ -13,10 +14,12 @@ createAccountButton.addEventListener('click', async () => {
   }
   try {
     signer = new ethers.Wallet(privateKey, provider);
-    alert('Account created successfully.');
     // show address
     addressElement = document.getElementById("address");
     addressElement.textContent = `Address: ${await signer.getAddress()}`;
+    // flush tx
+    await updateTransactionList();
+    alert('Account created successfully.');
   } catch (error) {
     alert('Invalid private key.');
   }
@@ -92,33 +95,56 @@ const updateBalance = async () => {
   const balanceElement = document.getElementById('balance');
   balanceElement.textContent = `Balance: ${balanceDisplay} AGG`;
 };
-// updateBalance();
-// setInterval(updateBalance, 10000);
+updateBalance();
+setInterval(updateBalance, 10000);
 
 // Update transaction list
+let offset = 0;
+
 const updateTransactionList = async () => {
   if (!signer) {
     return;
   }
-  const address = signer.getAddress();
-  const transactions = await provider.getTra(address);
-  console.log(transactions)
+  const address = await signer.getAddress();
+  console.log(address);
+  const data = {
+    jsonrpc: "2.0",
+    id: 1,
+    method: "agg_getTx",
+    params: [address, offset.toString(), "10"],
+  };
+
   const transactionListElement = document.querySelector('#transaction-list tbody');
   transactionListElement.innerHTML = '';
-  transactions.forEach((tx) => {
-    const row = document.createElement('tr');
-    const fromCell = document.createElement('td');
-    fromCell.textContent = tx.from;
-    const toCell = document.createElement('td');
-    toCell.textContent = tx.to;
-    const valueCell = document.createElement('td');
-    const valueDisplay = ethers.utils.formatEther(tx.value);
-    valueCell.textContent = `${valueDisplay} ETH`;
-    row.appendChild(fromCell);
-    row.appendChild(toCell);
-    row.appendChild(valueCell);
-    transactionListElement.appendChild(row);
-  });
+  fetch(rpcUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(response => response.json()).then(data => {
+        console.log(data);
+        data.result.forEach(e => {
+          const row = document.createElement('tr');
+          const evmTxHashCell = document.createElement('td');
+          evmTxHashCell.textContent = e.tx_hash.substring(0,5)+"..."+e.tx_hash.substring(e.tx_hash.length-5,e.tx_hash.length);
+          const fromCell = document.createElement('td');
+          fromCell.textContent = e.tx_from;
+          const toCell = document.createElement('td');
+          toCell.textContent = e.tx_to;
+          const valueCell = document.createElement('td');
+          const valueDisplay = ethers.utils.formatEther(e.tx_value);
+          valueCell.textContent = `${valueDisplay}`;
+          const rawDataCell = document.createElement('td');
+          rawDataCell.textContent = e.raw_data;
+          row.appendChild(evmTxHashCell);
+          row.appendChild(fromCell);
+          row.appendChild(toCell);
+          row.appendChild(valueCell);
+          // row.appendChild(rawDataCell);
+          transactionListElement.appendChild(row);
+        })
+      }
+  ).catch(error => console.error(error));
 };
-updateTransactionList();
-setInterval(updateTransactionList, 10000);
+// setInterval(updateTransactionList, 10000);
