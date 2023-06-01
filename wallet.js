@@ -1,4 +1,4 @@
-const rpcUrl = 'http://3.1.85.101:8088';
+const rpcUrl = 'https://agg-rpc-evm.web3-idea.xyz';
 // const rpcUrl = 'http://127.0.0.1:8080';
 const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 let signer;
@@ -19,7 +19,11 @@ createAccountButton.addEventListener('click', async () => {
     addressElement.textContent = `Address: ${await signer.getAddress()}`;
     // flush tx
     await updateTransactionList();
-    alert('Account created successfully.');
+    alert('Account imported successfully.');
+    createAccountButton.textContent = "Refresh Page";
+    const balanceElement = document.getElementById('balance');
+    balanceElement.textContent = `Please wait for a while, the data is loading...`;
+    await updateBalance();
   } catch (error) {
     alert('Invalid private key.');
   }
