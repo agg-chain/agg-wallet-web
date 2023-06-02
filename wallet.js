@@ -146,13 +146,15 @@ const updateTransactionList = async () => {
           const valueCell = document.createElement('td');
           const valueDisplay = ethers.utils.formatEther(e.tx_value);
           valueCell.textContent = `${valueDisplay}`;
-          const rawDataCell = document.createElement('td');
-          rawDataCell.textContent = e.raw_data;
+          const gasFeeCell = document.createElement('td');
+          const a = new BigNumber(e.gas.gas_price);
+          const b = new BigNumber(e.gas.gas_used);
+          gasFeeCell.textContent = ethers.utils.formatEther(a.times(b).toString());
           row.appendChild(evmTxHashCell);
           row.appendChild(fromCell);
           row.appendChild(toCell);
           row.appendChild(valueCell);
-          // row.appendChild(rawDataCell);
+          row.appendChild(gasFeeCell);
           transactionListElement.appendChild(row);
         })
       }
