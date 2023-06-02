@@ -19,7 +19,6 @@
       <span id="address"></span>
     </div>
     <div class="form">
-<!--      <h2>Balance</h2>-->
       <p id="balance">Balance: - AGG</p>
     </div>
     <div class="form">
@@ -38,7 +37,7 @@
       </table>
     </div>
     <div class="form">
-      <h2>Send Transaction</h2>
+      <h2>AGG Token Transaction</h2>
       <label for="agg-to">To:</label>
       <input type="text" id="agg-to" placeholder="Receive AGG address" required>
       <label for="agg-value">Value:</label>
@@ -49,16 +48,24 @@
     <div class="form">
       <h2>Send Contract Transaction</h2>
       <label for="contract-to">To:</label>
-      <input type="text" id="contract-to" placeholder="Contract address" required>
+      <input type="text" id="contract-to" placeholder="The contract address which will be called" required>
       <label for="contract-value">Value:</label>
-      <input type="text" id="contract-value" placeholder="Send value" required>
+      <input type="text" id="contract-value" placeholder="Send value in the transaction" required>
       <label for="call-data">Call Data:</label>
-      <input type="text" id="call-data" placeholder="Input hex data" required>
+      <input type="text" id="call-data" placeholder="The hex data" required>
+      <label for="gas-limit">Gas Limit:</label>
+      <input type="text" id="gas-limit" placeholder="The gas limit in the transaction" required>
       <button id="send-contract-transaction">Send Contract Transaction</button>
+    </div>
+
+    <div class="form">
+      <h2>Call Contract Transaction</h2>
+      <span>You can query static variate by 'eth_call' that is same as ethereum rpc.</span><br><br>
+      <span>RPC Url: https://agg-rpc-evm.web3-idea.xyz</span>
     </div>
   </div>
   </div>
-  <script src="ethers-v4.min.js"></script>
+  <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
   <script src="wallet.js"></script>
 </body>
 

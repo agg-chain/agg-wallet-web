@@ -46,9 +46,11 @@ sendTransactionButton.addEventListener('click', async () => {
   }
   try {
     const tx = {
-      to,
+      from: await signer.getAddress(),
+      to: to,
       value: ethers.utils.parseEther(value),
       gasLimit: ethers.utils.hexlify(21000),
+      gasPrice: await provider.getGasPrice(),
       nonce: await signer.getTransactionCount(),
     };
     const txResponse = await signer.sendTransaction(tx);
@@ -67,27 +69,32 @@ sendContractTransactionButton.addEventListener('click', async () => {
   }
   const toInput = document.getElementById('contract-to');
   const valueInput = document.getElementById('contract-value');
-  const callData = document.getElementById('call-data');
+  const callDataInput = document.getElementById('call-data');
+  const gasLimitInput = document.getElementById('gas-limit');
   const to = toInput.value.trim();
   const value = valueInput.value.trim();
+  const callData = callDataInput.value.trim();
+  const gasLimit = gasLimitInput.value.trim();
   if (!to || !value) {
     alert('Please enter a recipient address and a value.');
     return;
   }
   try {
     const tx = {
-      to,
+      from: await signer.getAddress(),
+      to: to,
       value: ethers.utils.parseEther(value),
       data: callData,
-      gasLimit: ethers.utils.hexlify(21000),
+      gasLimit: ethers.utils.hexlify(parseInt(gasLimit, 10)),
+      gasPrice: await provider.getGasPrice(),
       nonce: await signer.getTransactionCount(),
     };
     const txResponse = await signer.sendTransaction(tx);
-    alert(`Transaction sent successfully. Transaction hash: ${txResponse.hash}`);
+    alert(`Contract transaction sent successfully. Contract transaction hash: ${txResponse.hash}`);
   } catch (error) {
-    alert(`Transaction failed. Error message: ${error.message}`);
+    alert(`Contract transaction failed. Error message: ${error.message}`);
   }
-});
+})
 
 // Update balance
 const updateBalance = async () => {
@@ -151,4 +158,3 @@ const updateTransactionList = async () => {
       }
   ).catch(error => console.error(error));
 };
-// setInterval(updateTransactionList, 10000);
